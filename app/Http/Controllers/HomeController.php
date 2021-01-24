@@ -51,7 +51,7 @@ class HomeController extends Controller
 
         $userId = Auth::id();
 
-        return view('home.base', [
+        return view('home.index', [
             'incomeBase' => $this->incomeBaseRepository->getByUserId($userId),
             'costBase' => $this->costBaseRepository->getByUserId($userId),
             'base_info' => [

@@ -231,7 +231,7 @@ return [
         ],
         [
             'text' => 'Стрічка',
-            'url'  => '#',
+            'route'  => 'timeline',
             'icon' => 'fa fa-list',
         ],
         [

@@ -32,12 +32,15 @@ abstract class AbstractRepository
 
     /**
      * @param $userId
+     * @param string $order_by_field
+     * @param string $order_by_method
      * @return mixed
      */
-    public function getByUserId($userId)
+    public function getByUserId($userId, $order_by_field = "created_at", $order_by_method = "DESC")
     {
         return $this->startCondition()
             ->where(['user_id' => $userId])
+            ->orderBy($order_by_field, $order_by_method)
             ->get();
     }
 

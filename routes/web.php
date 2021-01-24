@@ -30,7 +30,6 @@ Route::group(['prefix' => 'income', 'as' => 'income.', 'middleware' => ['auth']]
 Route::group(['prefix' => 'cost', 'as' => 'cost.', 'middleware' => ['auth']], function () {
     Route::get('base/create', [\App\Http\Controllers\Cost\CostBaseController::class, 'create'])->name('base_create');
     Route::get('base/edit/{id}', [\App\Http\Controllers\Cost\CostBaseController::class, 'edit'])->name('base_edit') -> where(['id' => '[0-9]+']);
-
     Route::post('base/store', [\App\Http\Controllers\Cost\CostBaseController::class, 'store'])->name('base_store');
     Route::post('base/update', [\App\Http\Controllers\Cost\CostBaseController::class, 'update'])->name('base_update');
 
@@ -43,4 +42,6 @@ Route::group(['prefix' => 'cost-log', 'as' => 'cost_log.', 'middleware' => ['aut
 Route::group(['prefix' => 'income-log', 'as' => 'income_log.', 'middleware' => ['auth']], function () {
     Route::post('add-income', [\App\Http\Controllers\Income\IncomeLogController::class, 'addIncome'])->name('addIncome');
 });
+
+Route::get('timeline', [\App\Http\Controllers\TimelineController::class, 'index'])->name('timeline');
 
