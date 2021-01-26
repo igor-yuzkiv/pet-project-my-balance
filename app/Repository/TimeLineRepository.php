@@ -10,38 +10,58 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use phpDocumentor\Reflection\Types\Collection;
 
+/**
+ * Class TimeLineRepository
+ * @package App\Repository
+ */
 class TimeLineRepository
 {
+    /**
+     * @var IncomeLog
+     */
     private $incomeLog;
+    /**
+     * @var CostLog
+     */
     private $costLog;
 
+    /**
+     * TimeLineRepository constructor.
+     */
     public function __construct()
     {
         $this->incomeLog = new IncomeLog();
         $this->costLog = new CostLog();
     }
 
-    public function getForTimeLine() {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getForTimeLine()
+    {
         $userId = Auth::id();
-
-        /*$result = [
-            'costLog' => $this->getCostLogByUserId($userId),
-            'incomeLog' => $this->getIncomeLogByUserID($userId)
-        ];*/
 
         $costLog = $this->getCostLogByUserId($userId);
         $incomeLog = $this->getIncomeLogByUserID($userId);
 
-        $result = collect();
-
-        collect($costLog)->merge($incomeLog)->map(function ($item) use ($result) {
-            $result[$item->created_at->toDateString()] = $item;
-        });
+        $result = collect($costLog)
+            ->merge($incomeLog)
+            ->sortByDesc(function ($item) {
+                return $item->created_at->toDateString();
+            })
+            ->groupBy(function ($item) {
+                return $item->created_at->toDateString();
+            });
 
         return $result;
     }
 
-    public function getCostLogByUserId($userId) {
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public function getCostLogByUserId($userId)
+    {
 
         return $this->costLog
             ->where(['user_id' => $userId])
@@ -50,19 +70,28 @@ class TimeLineRepository
             ->get();
     }
 
-    public function getIncomeLogByUserID ($userId) {
+    /**
+     * @return array
+     */
+    private function getPeriod()
+    {
+        return [
+            Carbon::now()->firstOfMonth()->toDateString(),
+            Carbon::now()->lastOfMonth()->toDateString(),
+        ];
+    }
+
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public function getIncomeLogByUserID($userId)
+    {
         return $this->incomeLog
             ->where(['user_id' => $userId])
             ->whereBetween('created_at', $this->getPeriod())
             ->with('incomeBase')
             ->get();
-    }
-
-    private function getPeriod () {
-        return [
-            Carbon::now()->firstOfMonth()->toDateString(),
-            Carbon::now()->lastOfMonth()->toDateString(),
-        ];
     }
 
 }

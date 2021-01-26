@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cost\CostLog;
 use App\Repository\TimeLineRepository;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
@@ -20,9 +21,8 @@ class TimelineController extends Controller
 
 
     public function index() {
-
-        dd($this->timeLineRepository->getForTimeLine());
-
-        return view('timeline.index', []);
+        return view('timeline.index', [
+            'timeLineData' => $this->timeLineRepository->getForTimeLine(),
+        ]);
     }
 }

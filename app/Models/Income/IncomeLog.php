@@ -32,7 +32,7 @@ class IncomeLog extends Model
      */
     public function incomeBase()
     {
-        return $this->hasOne(IncomeBase::class, 'id', 'income_base_id');
+        return $this->hasMany(IncomeBase::class, 'id', 'income_base_id');
     }
 
     public function user()
